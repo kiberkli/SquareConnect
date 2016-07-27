@@ -31,7 +31,7 @@ public class CustomerCard {
 		if (billingAddress != null) billingAddress.printAddress();
 	}
 	
-	public Card sqCreateCustomerCard(String customerId) throws Exception {
+	public Card sqCreateCustomerCard(String customerId) throws SquareUpException {
 		Card results = null;
 
 		if (this.cardNonce != null) {
@@ -43,9 +43,8 @@ public class CustomerCard {
 					squareUpResponse.card.printCard();
 					results = squareUpResponse.card;
 				}
-				if (squareUpResponse != null && squareUpResponse.error != null) {
-					squareUpResponse.error.printError();
-					throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+				if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+					throw new SquareUpException(squareUpResponse.errorItems);
 				} 
 			}
 		}
@@ -53,16 +52,15 @@ public class CustomerCard {
 		return results;
 	}
 
-	public static void sqDeleteCustomerCard(String customerId, String cardId) {
+	public static void sqDeleteCustomerCard(String customerId, String cardId) throws SquareUpException {
 		if (customerId != null && !customerId.isEmpty() && cardId != null && !cardId.isEmpty()) {
 			String command = String.format("%s/%s/cards/%s", SquareUpUtility.COMMAND_CUSTOMERS, customerId, cardId);
 			String squareResponseString = SquareUpUtility.composeAndSendSquareUpRequest(command, null, SquareUpUtility.POST_METHOD_DELETE);
 			if (squareResponseString != null && !squareResponseString.isEmpty()) {
 				SquareUpResponse squareUpResponse = new SquareUpResponse(squareResponseString);
-				if (squareUpResponse != null && squareUpResponse.error != null) {
-					squareUpResponse.error.printError();
-				} else
-					log.error("No object returned from Square.");
+				if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+					throw new SquareUpException(squareUpResponse.errorItems);
+				}
 			}
 		}
 	}

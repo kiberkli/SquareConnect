@@ -79,15 +79,14 @@ public class Charge {
 		String command = String.format("%s/%s/transactions", SquareUpUtility.COMMAND_LOCATIONS, squareLocationId);
 		String squareResponseString = SquareUpUtility.composeAndSendSquareUpRequest(command, this.toJSONObject().toString());
 		if (squareResponseString != null && !squareResponseString.isEmpty()) {
-			SquareUpResponse squareResponse = new SquareUpResponse(squareResponseString);
-			if (squareResponse != null && squareResponse.transaction != null) {
-				results = squareResponse.transaction;
+			SquareUpResponse squareUpResponse = new SquareUpResponse(squareResponseString);
+			if (squareUpResponse != null && squareUpResponse.transaction != null) {
+				results = squareUpResponse.transaction;
 				results.printTransaction();
-			} else if(squareResponse.error != null) {
-				squareResponse.error.printError();
-				throw new Exception(squareResponse.error.code + " - " + squareResponse.error.category + ": " + squareResponse.error.detail);
-			} else
-				log.info("No location object returned.");
+			}
+			if(squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
+			}
 		}
 		
 		return results;

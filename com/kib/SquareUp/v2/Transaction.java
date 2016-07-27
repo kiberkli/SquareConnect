@@ -99,7 +99,7 @@ public class Transaction {
 			}
 	}
 
-	public static List<Transaction> sqListTransactions(String locationId) throws Exception {
+	public static List<Transaction> sqListTransactions(String locationId) throws SquareUpException {
 		List<Transaction> results = null;
 		
 		String command = String.format("%s/%s/transactions", SquareUpUtility.COMMAND_LOCATIONS, locationId);
@@ -109,9 +109,8 @@ public class Transaction {
 			if (squareUpResponse != null && squareUpResponse.transactionItems != null) {
 				results = squareUpResponse.transactionItems;
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			}
 		}
 

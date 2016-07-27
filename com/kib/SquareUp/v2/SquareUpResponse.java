@@ -13,6 +13,7 @@ public class SquareUpResponse {
 
 	public static final String LOCATION_KEY = "locations";
 	public static final String ERROR_KEY = "error";
+	public static final String ERRORS_KEY = "errors";
 	public static final String CARD_KEY = "card";
 	public static final String CUSTOMER_KEY = "customer";
 	public static final String CUSTOMERS_KEY = "customers";
@@ -21,15 +22,16 @@ public class SquareUpResponse {
 	public static final String REFUND_KEY = "refund";
 	public static final String REFUNDS_KEY = "refunds";
 
-	public Error error = null;
-	public List<Location> locationItems = null;
+	//public Error error = null;
 	public Card card = null;
 	public Customer customer = null;
 	public Transaction transaction = null;
 	public Refund refund = null;
+	public List<Location> locationItems = null;
 	public List<Customer> customerItems = null;
 	public List<Transaction> transactionItems = null;
 	public List<Refund> refundItems = null;
+	public List<Error> errorItems = null;
 
 	public SquareUpResponse(String jsonResponse) {
 		
@@ -41,7 +43,8 @@ public class SquareUpResponse {
 			if (jsonObject.containsKey(ERROR_KEY)) {
 				JSON value = (JSON)jsonObject.get(ERROR_KEY);
 				if (value instanceof JSONObject) {
-					error = new Error(value);
+					errorItems = new ArrayList<>();
+					errorItems.add(new Error(value));
 				}
 			}
 
@@ -80,6 +83,19 @@ public class SquareUpResponse {
 						Customer newCustomer = Customer.fromJSONObject((JSON)obj);
 						if (newCustomer != null)
 							customerItems.add(newCustomer);
+					}
+				}
+			}
+			
+			if (jsonObject.containsKey(ERRORS_KEY)) {
+				JSON value = (JSON)jsonObject.get(ERRORS_KEY);
+				if (value instanceof JSONArray) {
+					errorItems = new ArrayList<Error>();
+					JSONArray jsonArray = (JSONArray)value;
+					for(Object obj : jsonArray) {
+						Error newError = new Error((JSON)obj);
+						if (newError != null)
+							errorItems.add(newError);
 					}
 				}
 			}

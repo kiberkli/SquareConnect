@@ -123,16 +123,15 @@ public class Refund {
 				squareUpResponse.refund.printRefund();
 				results = squareUpResponse.refund;
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			}
 		}
 
 		return results;
 	}
 	
-	public static List<Refund> sqListRefunds(String locationId) throws Exception {
+	public static List<Refund> sqListRefunds(String locationId) throws SquareUpException {
 		List<Refund> results = null;
 		
 		String command = String.format("%s/%s/refunds", SquareUpUtility.COMMAND_LOCATIONS, locationId);
@@ -142,9 +141,8 @@ public class Refund {
 			if (squareUpResponse != null && squareUpResponse.refundItems != null) {
 				results = squareUpResponse.refundItems;
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			}
 		}
 

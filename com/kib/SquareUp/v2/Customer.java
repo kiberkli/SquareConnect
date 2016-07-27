@@ -129,7 +129,7 @@ public class Customer {
 		if (address != null) address.printAddress();
 	}
 
-	public Customer sqCreateCustomer() throws Exception {
+	public Customer sqCreateCustomer() throws SquareUpException {
 		Customer results = null;
 		
 		String squareResponseString = SquareUpUtility.composeAndSendSquareUpRequest(SquareUpUtility.COMMAND_CUSTOMERS, this.toJSONObject().toString());
@@ -139,16 +139,15 @@ public class Customer {
 				squareUpResponse.customer.printCustomer();
 				results = squareUpResponse.customer;
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			}
 		}
 
 		return results;
 	}
 
-	public static Customer sqRetrieveCustomer(String customerId) throws Exception {
+	public static Customer sqRetrieveCustomer(String customerId) throws SquareUpException {
 		Customer results = null;
 		
 		String command = String.format("%s/%s", SquareUpUtility.COMMAND_CUSTOMERS, customerId);
@@ -159,16 +158,15 @@ public class Customer {
 				squareUpResponse.customer.printCustomer();
 				results = squareUpResponse.customer;
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			}
 		}
 
 		return results;
 	}
 	
-	public static List<Customer> sqRetrieveCustomers() throws Exception {
+	public static List<Customer> sqRetrieveCustomers() throws SquareUpException {
 		List<Customer> results = new ArrayList<Customer>();
 		
 		String squareResponseString = SquareUpUtility.composeAndSendSquareUpRequest(SquareUpUtility.COMMAND_CUSTOMERS, null);
@@ -179,28 +177,26 @@ public class Customer {
 				for(Customer customer : results)
 					customer.printCustomer();
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			} 
 		}
 
 		return results;
 	}
 	
-	public static void sqDeleteCustomer(String customerId)  throws Exception {
+	public static void sqDeleteCustomer(String customerId)  throws SquareUpException {
 		String command = String.format("%s/%s", SquareUpUtility.COMMAND_CUSTOMERS, customerId);
 		String squareResponseString = SquareUpUtility.composeAndSendSquareUpRequest(command, null, SquareUpUtility.POST_METHOD_DELETE);
 		if (squareResponseString != null && !squareResponseString.isEmpty()) {
 			SquareUpResponse squareUpResponse = new SquareUpResponse(squareResponseString);
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			} 
 		}
 	}
 
-	public Customer sqUpdateCustomer() throws Exception {
+	public Customer sqUpdateCustomer() throws SquareUpException {
 		Customer results = null;
 		
 		String command = String.format("%s/%s", SquareUpUtility.COMMAND_CUSTOMERS, this.id);
@@ -211,9 +207,8 @@ public class Customer {
 				squareUpResponse.customer.printCustomer();
 				results = squareUpResponse.customer;
 			}
-			if (squareUpResponse != null && squareUpResponse.error != null) {
-				squareUpResponse.error.printError();
-				throw new Exception(squareUpResponse.error.code + " - " + squareUpResponse.error.category + ": " + squareUpResponse.error.detail);
+			if (squareUpResponse != null && squareUpResponse.errorItems != null) {
+				throw new SquareUpException(squareUpResponse.errorItems);
 			} 
 		}
 

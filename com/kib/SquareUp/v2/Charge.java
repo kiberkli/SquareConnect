@@ -70,11 +70,11 @@ public class Charge {
 		log.debug(" buyerEmailAddress: " + buyerEmailAddress);
 	}
 
-	public Transaction sqTransaction(String squareLocationId) throws Exception {
+	public Transaction sqTransaction(String squareLocationId) throws SquareUpException {
 		Transaction results = null;
 		
 		if ((buyerEmailAddress == null || buyerEmailAddress.isEmpty()) && (billingAddress == null || shippingAddress == null))
-			throw new Exception("Required values are missing, please provide an buyer email address and a shipping/billing address.");
+			throw new SquareUpException("Required values are missing, please provide an buyer email address and a shipping/billing address.");
 
 		String command = String.format("%s/%s/transactions", SquareUpUtility.COMMAND_LOCATIONS, squareLocationId);
 		String squareResponseString = SquareUpUtility.composeAndSendSquareUpRequest(command, this.toJSONObject().toString());

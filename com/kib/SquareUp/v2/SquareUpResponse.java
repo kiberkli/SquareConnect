@@ -43,7 +43,7 @@ public class SquareUpResponse {
 			if (jsonObject.containsKey(ERROR_KEY)) {
 				JSON value = (JSON)jsonObject.get(ERROR_KEY);
 				if (value instanceof JSONObject) {
-					errorItems = new ArrayList<>();
+					errorItems = new ArrayList();
 					errorItems.add(new Error(value));
 				}
 			}

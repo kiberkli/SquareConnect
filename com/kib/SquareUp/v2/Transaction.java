@@ -1,5 +1,6 @@
 package com.kib.SquareUp.v2;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,15 @@ public class Transaction {
 				results.clientId = ((JSONObject) json).getString(CLIENT_ID_KEY);
 		}
 		return results;
+	}
+	
+	public BigDecimal totalTendered() {
+		double results = 0;
+		if (tenders != null)
+			for (Tender tender : tenders) {
+				results =+ tender.amountMoney.amount;
+			}
+		return new BigDecimal(results / 100);
 	}
 
 	public JSONObject toJSONObject() {

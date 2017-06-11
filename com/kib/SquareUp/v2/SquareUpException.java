@@ -5,13 +5,18 @@ import java.util.List;
 public class SquareUpException extends Exception {
 	
 	private List<Error> errors = null;
+	private String _message;
 	
 	public SquareUpException(List<Error> squareErrors) {
 		errors = squareErrors;
 	}
+	
+	public SquareUpException(String aValue) {
+		_message = aValue;
+	}
 
 	public String getMessage() {
-		return errors.get(0).detail;
+		return _message;
 	}
 
 	public String getCategory() {
